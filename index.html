@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FF GLORY | Premium Access</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #FF9F0A;
+            --success: #32D74B;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: #000;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* --- Entry Screen (Icon Only Button) --- */
+        #entry-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; display: flex; justify-content: center; align-items: center;
+            z-index: 1000;
+        }
+
+        .premium-icon-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .premium-icon-btn:hover {
+            background: #fff;
+            color: #000;
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255,255,255,0.1);
+        }
+
+        /* --- Main UI Card --- */
+        #main-ui {
+            display: none; opacity: 0; transform: scale(0.98);
+            width: 100%; justify-content: center; padding: 60px 20px;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(50px) saturate(210%);
+            -webkit-backdrop-filter: blur(50px) saturate(210%);
+            border: 1px solid var(--border);
+            border-radius: 48px;
+            width: 100%; max-width: 410px;
+            padding: 50px 30px; text-align: center;
+            box-shadow: 0 60px 150px rgba(0,0,0,1);
+        }
+
+        .logo-img {
+            width: 100px; height: 100px; border-radius: 28px;
+            margin-bottom: 25px; object-fit: cover;
+            border: 1.5px solid var(--border);
+        }
+
+        .premium-tag {
+            font-size: 13px; color: var(--accent); font-weight: 800;
+            letter-spacing: 3px; margin-bottom: 12px; text-transform: uppercase;
+        }
+
+        h1 { font-size: 32px; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 10px; }
+
+        .price-badge {
+            background: rgba(50, 215, 75, 0.08);
+            color: var(--success); padding: 8px 24px;
+            border-radius: 50px; font-size: 12px; margin-bottom: 40px;
+            display: inline-flex; align-items: center; gap: 8px;
+            font-weight: 800; border: 1px solid rgba(50, 215, 75, 0.15);
+        }
+
+        /* --- Settings Panel --- */
+        .settings-panel {
+            background: rgba(255, 255, 255, 0.015); border-radius: 30px;
+            padding: 24px; text-align: left; margin-bottom: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .setting-header { 
+            color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 900;
+            margin-bottom: 20px; letter-spacing: 1.5px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .row { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.02); 
+        }
+
+        .label-group { display: flex; align-items: center; gap: 12px; }
+        .label { font-size: 12px; font-weight: 800; color: rgba(255,255,255,0.5); text-transform: uppercase; }
+
+        .switch-group { display: flex; background: #000; border-radius: 12px; padding: 4px; border: 1px solid #1a1a1a; }
+        .switch-btn { padding: 6px 18px; font-size: 11px; font-weight: 900; border-radius: 8px; color: #333; }
+        .switch-btn.active { background: #fff; color: #000; }
+
+        .dropdown-box {
+            background: rgba(0,0,0,0.6); border: 1.5px solid #1a1a1a;
+            padding: 8px 15px; border-radius: 10px;
+            display: flex; align-items: center; gap: 12px; min-width: 110px;
+            justify-content: space-between;
+        }
+        .dropdown-text { font-size: 11px; color: #777; font-weight: 900; }
+
+        /* --- Payment Info Text --- */
+        .info-premium {
+            font-size: 12px; color: var(--accent); font-weight: 800;
+            letter-spacing: 1.5px; margin-bottom: 30px; text-transform: uppercase;
+            padding: 0 10px; line-height: 1.6;
+        }
+
+        .qr-card { 
+            background: #fff; padding: 15px; border-radius: 32px; 
+            display: inline-block; margin-bottom: 30px;
+        }
+        .qr-img { width: 190px; height: 190px; display: block; border-radius: 20px; }
+
+        .wa-button {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            background: #fff; color: #000; text-decoration: none;
+            padding: 24px; border-radius: 26px; font-weight: 900; font-size: 17px;
+            transition: 0.4s cubic-bezier(0.1, 0, 0, 1);
+        }
+        .wa-button:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(255,255,255,0.15); }
+    </style>
+</head>
+<body>
+
+    <div id="entry-screen">
+        <button class="premium-icon-btn" onclick="openSite()">
+            <i data-lucide="shield-check" size="35"></i>
+        </button>
+    </div>
+
+    <div id="main-ui">
+        <div class="glass-card">
+            <img src="logo.png" alt="FREE FIRE" class="logo-img">
+            
+            <div class="premium-tag">FREE FIRE GUILD GLORY</div>
+            <h1>FF OFFICIAL</h1>
+            
+            <div class="price-badge">
+                <i data-lucide="check-circle-2" size="14"></i> 1 SQUAD : RS. 390
+            </div>
+
+            <div class="settings-panel">
+                <div class="setting-header">
+                    <i data-lucide="settings-2" size="16" color="#FF9F0A"></i> CHANGE GUILD SETTING
+                </div>
+                
+                <div class="row">
+                    <div class="label-group">
+                        <i data-lucide="shield-check" size="15" color="#555"></i>
+                        <span class="label">AUTO APPROVAL</span>
+                    </div>
+                    <div class="switch-group">
+                        <div class="switch-btn active">OFF</div>
+                        <div class="switch-btn">ON</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="label-group">
+                        <i data-lucide="bar-chart" size="15" color="#555"></i>
+                        <span class="label">LV.</span>
+                    </div>
+                    <div class="dropdown-box">
+                        <span class="dropdown-text">DEFAULT</span>
+                        <i data-lucide="chevron-down" size="14" color="#555"></i>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="label-group">
+                        <i data-lucide="swords" size="15" color="#555"></i>
+                        <span class="label">BR-RANKED</span>
+                    </div>
+                    <div class="dropdown-box">
+                        <span class="dropdown-text">DEFAULT</span>
+                        <i data-lucide="chevron-down" size="14" color="#555"></i>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="label-group">
+                        <i data-lucide="trophy" size="15" color="#555"></i>
+                        <span class="label">CS-RANKED</span>
+                    </div>
+                    <div class="dropdown-box">
+                        <span class="dropdown-text">DEFAULT</span>
+                        <i data-lucide="chevron-down" size="14" color="#555"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="qr-card">
+                <img src="qr.png" alt="Payment" class="qr-img">
+            </div>
+
+            <div class="info-premium">
+                SEND SCREENSHOT & GUILD ID AFTER PAYMENT
+            </div>
+
+            <a href="https://wa.me/9779845466761?text=glory%20order" class="wa-button">
+                <i data-lucide="zap" size="20" fill="black"></i> GET STARTED
+            </a>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function openSite() {
+            const entry = document.getElementById('entry-screen');
+            const main = document.getElementById('main-ui');
+            
+            entry.style.display = 'none';
+            main.style.display = 'flex';
+            document.body.style.overflow = 'auto'; 
+            
+            setTimeout(() => {
+                main.style.opacity = '1';
+                main.style.transform = 'scale(1)';
+            }, 50);
+        }
+    </script>
+</body>
+</html>
